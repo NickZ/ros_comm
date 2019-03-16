@@ -124,6 +124,9 @@ public:
   void addASyncConnection(const ASyncXMLRPCConnectionPtr& conn);
   void removeASyncConnection(const ASyncXMLRPCConnectionPtr& conn);
 
+  void setPort(int port);
+  int  getPort();
+
   bool bind(const std::string& function_name, const XMLRPCFunc& cb);
   void unbind(const std::string& function_name);
 

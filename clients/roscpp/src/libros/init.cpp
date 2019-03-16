@@ -459,6 +459,22 @@ void init(const M_string& remappings, const std::string& name, uint32_t options)
     WSAStartup(MAKEWORD(2, 0), &wsaData);
 #endif
     check_ipv6_environment();
+
+    //If __xmlrpc_server_port is specified, set XMLRPCManager to use that port.
+    M_string::const_iterator it = remappings.find("__xmlrpc_server_port");
+    if (it != remappings.end())
+    {
+      try
+      {
+        uint16_t g_xmlrpc_server_port = boost::lexical_cast<uint16_t>(it->second);
+        XMLRPCManager::instance()->setPort((int) g_xmlrpc_server_port);
+      }
+      catch (boost::bad_lexical_cast&)
+      {
+        throw ros::InvalidPortException("__tcpros_server_port [" + it->second + "] was not specified as a number within the 0-65535 range");
+      }
+    }
+
     network::init(remappings);
     master::init(remappings);
     // names:: namespace is initialized by this_node

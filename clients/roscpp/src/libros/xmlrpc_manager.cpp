@@ -116,10 +116,10 @@ XMLRPCManager::~XMLRPCManager()
 void XMLRPCManager::start()
 {
   shutting_down_ = false;
-  port_ = 0;
+//  port_ = 0;
   bind("getPid", getPid);
 
-  bool bound = server_.bindAndListen(0);
+  bool bound = server_.bindAndListen(port_);
   (void) bound;
   ROS_ASSERT(bound);
   port_ = server_.get_port();
@@ -396,6 +396,14 @@ void XMLRPCManager::removeASyncConnection(const ASyncXMLRPCConnectionPtr& conn)
 {
   boost::mutex::scoped_lock lock(removed_connections_mutex_);
   removed_connections_.insert(conn);
+}
+
+void XMLRPCManager::setPort(int port){
+  port_=port;
+}
+
+int XMLRPCManager::getPort(){
+  return port_;
 }
 
 bool XMLRPCManager::bind(const std::string& function_name, const XMLRPCFunc& cb)
